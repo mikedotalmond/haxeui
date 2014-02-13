@@ -31,18 +31,25 @@ class FilesDataSource extends ArrayDataSource {
 	private override function _open():Bool {
 		#if !(flash || html5)
 		if (isDir(_dir)) {
+			
+			if (!isRoot(_dir)) {
+				add({ text: '^', isParent:true});
+			} else {
+				
+			}
+			
 			var files:Array<String> = FileSystem.readDirectory(_dir);
-		
+			
 			for (file in files) {
 				if (isDir(_dir + "/" + file)) { // add dirs first
-					var o = { text: file };
+					var o = { text: file, isDir:true };
 					add(o);
 				}
 			}
 			
 			for (file in files) {
 				if (!isDir(_dir + "/" + file)) {
-					var o = { text: file };
+					var o = { text: file, isFile:true };
 					add(o);
 				}
 			}
@@ -51,12 +58,41 @@ class FilesDataSource extends ArrayDataSource {
 		return true;
 	}
 	
+	
+	public function openParent():Bool {
+		#if !(flash || html5)
+		if (isDir(_dir) && !isRoot(_dir)) {
+			_dir = _dir.substring(0, _dir.lastIndexOf('/'));
+			removeAll();
+			_open();
+			return true;
+		}
+		#end
+		return false;
+	}
+	
+	public function openSubdirectory(name:String):Bool {
+		#if !(flash || html5)
+		if (isDir(_dir)) {
+			var path = '${_dir}/${name}';
+			if (isDir(path)) {
+				_dir = path;
+				removeAll();
+				_open();
+				return true;
+			}
+		}
+		#end
+		return false;
+	}
+	
+	
 	//******************************************************************************************
 	// Helpers
 	//******************************************************************************************
 	public override function createFromString(data:String = null, config:Dynamic = null):Void {
 		if (data != null) {
-			_dir = fixDir(data);
+			_dir = fixDir(FileSystem.fullPath(data));
 		}
 	}
 	
