@@ -5,7 +5,11 @@ import sys.FileSystem;
 #end
 
 class FilesDataSource extends ArrayDataSource {
-	private var _dir:String;
+	
+	public var dir(default, null):String;
+	public var showParentDirectory(default, null):Bool = true;
+	public var showHiddenFiles(default, null):Bool = false;
+	public var showHiddenDirectories(default, null):Bool = false;
 	
 	public function new() {
 		super();
@@ -30,27 +34,28 @@ class FilesDataSource extends ArrayDataSource {
 	
 	private override function _open():Bool {
 		#if !(flash || html5)
-		if (isDir(_dir)) {
+		if (isDir(dir)) {
 			
-			if (!isRoot(_dir)) {
-				add({ text: '^', isParent:true});
-			} else {
-				
+			if (!isRoot(dir) && showParentDirectory) {
+				add({ icon:'assets/ui/icons/bullet_arrow_up.png', isParent:true});
 			}
 			
-			var files:Array<String> = FileSystem.readDirectory(_dir);
-			
+			var files:Array<String> = FileSystem.readDirectory(dir);
 			for (file in files) {
-				if (isDir(_dir + "/" + file)) { // add dirs first
-					var o = { text: file, isDir:true };
-					add(o);
+				if (isDir(dir + "/" + file)) { // add dirs first
+					if (showHiddenDirectories || file.charAt(0) != '.') {
+						var o = { text: file, isDir:true, icon:'assets/ui/icons/folder.png' };
+						add(o);
+					}
 				}
 			}
 			
 			for (file in files) {
-				if (!isDir(_dir + "/" + file)) {
-					var o = { text: file, isFile:true };
-					add(o);
+				if (!isDir(dir + "/" + file)) {
+					if (showHiddenFiles || file.charAt(0) != '.') {
+						var o = { text: file, isFile:true, icon:'assets/ui/icons/page_white.png' };
+						add(o);
+					}
 				}
 			}
 		}
@@ -61,8 +66,8 @@ class FilesDataSource extends ArrayDataSource {
 	
 	public function openParent():Bool {
 		#if !(flash || html5)
-		if (isDir(_dir) && !isRoot(_dir)) {
-			_dir = _dir.substring(0, _dir.lastIndexOf('/'));
+		if (isDir(dir) && !isRoot(dir)) {
+			dir = dir.substring(0, dir.lastIndexOf('/'));
 			removeAll();
 			_open();
 			return true;
@@ -73,10 +78,10 @@ class FilesDataSource extends ArrayDataSource {
 	
 	public function openSubdirectory(name:String):Bool {
 		#if !(flash || html5)
-		if (isDir(_dir)) {
-			var path = '${_dir}/${name}';
+		if (isDir(dir)) {
+			var path = '${dir}/${name}';
 			if (isDir(path)) {
-				_dir = path;
+				dir = path;
 				removeAll();
 				_open();
 				return true;
@@ -92,7 +97,11 @@ class FilesDataSource extends ArrayDataSource {
 	//******************************************************************************************
 	public override function createFromString(data:String = null, config:Dynamic = null):Void {
 		if (data != null) {
-			_dir = fixDir(FileSystem.fullPath(data));
+			#if !(flash || html5) 
+			dir = fixDir(FileSystem.fullPath(data));
+			#else
+			dir = fixDir(data);
+			#end
 		}
 	}
 	
@@ -105,9 +114,7 @@ class FilesDataSource extends ArrayDataSource {
 		
 		#if !(flash || html5)
 		try {
-			if (isRoot(dir)) {
-				dir += "/";
-			}
+			if (isRoot(dir)) dir += "/";
 			isDir = FileSystem.isDirectory(dir);
 		} catch (ex:Dynamic) {
 			isDir = false;
