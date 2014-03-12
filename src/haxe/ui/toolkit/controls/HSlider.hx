@@ -3,16 +3,13 @@ package haxe.ui.toolkit.controls;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import haxe.ui.toolkit.core.interfaces.Direction;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.Screen;
 
 /**
  Horizontal slider bar control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the progess bar has changed
  **/
-class HSlider extends Slider {
+class HSlider extends Slider implements IClonable<HSlider> {
 	public function new() {
 		super();
 		direction = Direction.HORIZONTAL;
@@ -70,5 +67,4 @@ class HSlider extends Slider {
 		var newValue:Float = min + ((v / ucx) * m);
 		return newValue;
 	}
-	
 }

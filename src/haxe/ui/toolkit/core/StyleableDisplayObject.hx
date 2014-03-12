@@ -3,15 +3,16 @@ package haxe.ui.toolkit.core;
 import flash.filters.BitmapFilter;
 import flash.geom.Rectangle;
 import haxe.ds.StringMap;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
-import haxe.ui.toolkit.core.interfaces.IStyleable;
+import haxe.ui.toolkit.core.interfaces.IStyleableDisplayObject;
 import haxe.ui.toolkit.layout.GridLayout;
 import haxe.ui.toolkit.style.Style;
 import haxe.ui.toolkit.style.StyleHelper;
 import haxe.ui.toolkit.style.StyleManager;
 import haxe.ui.toolkit.util.FilterParser;
 
-class StyleableDisplayObject extends DisplayObjectContainer implements IStyleable  {
+class StyleableDisplayObject extends DisplayObjectContainer implements IStyleableDisplayObject implements IClonable<StyleableDisplayObject>  {
 	private var _style:Style;
 	private var _storedStyles:StringMap<Style>; // styles stored for ease later
 	private var _styleName:String;
@@ -71,6 +72,7 @@ class StyleableDisplayObject extends DisplayObjectContainer implements IStyleabl
 	// IStyleable
 	//******************************************************************************************
 	public var style(get, set):Style;
+	@:clonable
 	public var styleName(get, set):String;
 	public var inlineStyle(get, set):Style;
 	

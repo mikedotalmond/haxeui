@@ -3,13 +3,14 @@ package haxe.ui.toolkit.controls;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import haxe.ui.toolkit.core.Component;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
 import haxe.ui.toolkit.resources.ResourceManager;
 
 /**
  General purpose image control
  **/
-class Image extends Component {
+class Image extends Component implements IClonable<Image> {
 	private var _bmp:Bitmap;
 	private var _resource:String;
 	private var _stretch:Bool;
@@ -60,14 +61,26 @@ class Image extends Component {
 		}
 	}
 	
+	private override function get_value():Dynamic {
+		return resource;
+	}
+	
+	private override function set_value(newValue:Dynamic):Dynamic {
+		resource = newValue;
+		return newValue;
+	}
+	
 	//******************************************************************************************
 	// Methods/props
 	//******************************************************************************************
 	/**
 	 The resource asset for this image: eg `assets/myimage.jpeg`
 	 **/
+	@:clonable
 	public var resource(get, set):String;
+	@:clonable
 	public var stretch(get, set):Bool;
+	@:clonable
 	public var autoDisposeBitmapData(get, set):Bool;
 	
 	private function get_resource():String {

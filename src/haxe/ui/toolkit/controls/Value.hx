@@ -3,6 +3,7 @@ package haxe.ui.toolkit.controls;
 import flash.events.MouseEvent;
 import haxe.ui.toolkit.core.base.State;
 import haxe.ui.toolkit.core.Component;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.StateComponent;
 import haxe.ui.toolkit.events.UIEvent;
 import haxe.ui.toolkit.layout.AbsoluteLayout;
@@ -11,7 +12,7 @@ import haxe.ui.toolkit.layout.AbsoluteLayout;
  N-state cyclic value control
  **/
 
-class Value extends StateComponent {
+class Value extends StateComponent implements IClonable<Value> {
 	private var _values:Map<String, Button>;
 	private var _valuesList:Array<String>;
 	private var _value:String = "";
@@ -66,14 +67,14 @@ class Value extends StateComponent {
 	//******************************************************************************************
 	// Getters/setters
 	//******************************************************************************************
-	public var value(get, set):String;
+	@:clonable
 	public var interactive(get, set):Bool;
 	
-	private function get_value():String {
+	private override function get_value():Dynamic {
 		return _value;
 	}
 	
-	private function set_value(newValue:String):String {
+	private override function set_value(newValue:Dynamic):Dynamic {
 		if (newValue != _value) {
 			var valueControl:Button = _values.get(newValue);
 			if (valueControl != null) {
@@ -97,5 +98,15 @@ class Value extends StateComponent {
 	private function set_interactive(value:Bool):Bool {
 		_interactive = value;
 		return value;
+	}
+	
+	//******************************************************************************************
+	// Clone
+	//******************************************************************************************
+	public override function clone():Value {
+		for (v in this._valuesList) {
+			c.addValue(v);
+		}
+		return c;
 	}
 }

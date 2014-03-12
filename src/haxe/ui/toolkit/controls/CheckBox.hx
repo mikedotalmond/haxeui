@@ -4,31 +4,29 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import haxe.ui.toolkit.core.base.VerticalAlign;
 import haxe.ui.toolkit.core.Component;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.events.UIEvent;
 import haxe.ui.toolkit.layout.HorizontalLayout;
 import haxe.ui.toolkit.style.Style;
 
 /**
  Simple two state checkbox control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when the value of the checkbox is modified
  **/
 
-class CheckBox extends Component {
+@:event("UIEvent.CHANGE", "Dispatched when the value of the checkbox is modified") 
+class CheckBox extends Component implements IClonable<CheckBox> {
 	private var _value:CheckBoxValue;
 	private var _label:Text;
 	private var _selected:Bool;
 	
 	public function new() {
 		super();
-		_autoSize = true;
+		autoSize = true;
 		sprite.buttonMode = true;
 		sprite.useHandCursor = true;
 		_value = new CheckBoxValue();
 		_label = new Text();
-		_layout = new HorizontalLayout();
+		layout = new HorizontalLayout();
 	}
 
 	//******************************************************************************************
@@ -36,19 +34,18 @@ class CheckBox extends Component {
 	//******************************************************************************************
 	private override function initialize():Void {
 		super.initialize();
-		
+
 		_value.verticalAlign = VerticalAlign.CENTER;
 		addChild(_value);
 		addChild(_label);
 		
-		_label.addEventListener(MouseEvent.CLICK, function(e) {
+		_label.addEventListener(UIEvent.CLICK, function(e) {
 			_value.cycleValues();
 		});
 		
 		_value.addEventListener(UIEvent.CHANGE, function (e) {
 			selected = _value.value == "selected"; // updates checkbox state.
 		}); 
-		
 	}
 	
 	//******************************************************************************************
@@ -70,6 +67,7 @@ class CheckBox extends Component {
 	/**
 	 Defines whether the checkbox is checked or not
 	 **/
+	@:clonable
 	public var selected(get, set):Bool;
 	
 	private function get_selected():Bool {
@@ -110,7 +108,8 @@ class CheckBox extends Component {
 	}
 }
 
-private class CheckBoxValue extends Value {
+@exclude
+class CheckBoxValue extends Value implements IClonable<CheckBoxValue> {
 	public function new() {
 		super();
 		_value = "unselected";

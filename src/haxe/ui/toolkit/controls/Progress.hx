@@ -6,6 +6,7 @@ import flash.Lib;
 import haxe.ui.toolkit.core.base.State;
 import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.interfaces.Direction;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.IDirectional;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
@@ -16,12 +17,10 @@ import haxe.ui.toolkit.layout.Layout;
 
 /**
  Progress bar control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the progess bar has changed
  **/
-class Progress extends StateComponent implements IScrollable implements IDirectional {
+ 
+@:event("UIEvent.CHANGE", "Dispatched when the value of the progress bar changes") 
+class Progress extends StateComponent implements IScrollable implements IDirectional implements IClonable<Progress> {
 	private var _direction:String;
 	private var _min:Float = 0;
 	private var _max:Float = 100;
@@ -60,26 +59,32 @@ class Progress extends StateComponent implements IScrollable implements IDirecti
 	/**
 	 The direction of this progress bar. Can be `horizontal` or `vertical`
 	 **/
+	@:clonable
 	public var direction(get, set):String;
 	/**
 	 Minimum value allowed for the progress bar
 	 **/
+	@:clonable
 	public var min(get, set):Float;
 	/**
 	 Maximum value allowed for the progress bar
 	 **/
+	@:clonable
 	public var max(get, set):Float;
 	/**
 	 Value of the progress bar
 	 **/
+	@:clonable
 	public var pos(get, set):Float;
 	/**
 	 Not applicable to progress bar
 	 **/
+	@:clonable
 	public var pageSize(get, set):Float;
 	/**
 	 How much the scrollbar should increment (or deincrement)
 	 **/
+	@:clonable
 	public var incrementSize(get, set):Float;
 	
 	private function get_direction():String {
@@ -165,7 +170,8 @@ class Progress extends StateComponent implements IScrollable implements IDirecti
 	}
 }
 
-private class HProgressLayout extends DefaultLayout {
+@exclude
+class HProgressLayout extends DefaultLayout {
 	public function new() {
 		super();
 	}
@@ -233,7 +239,8 @@ private class HProgressLayout extends DefaultLayout {
 	}
 }
 
-private class VProgressLayout extends DefaultLayout {
+@exclude
+class VProgressLayout extends DefaultLayout {
 	public function new() {
 		super();
 	}

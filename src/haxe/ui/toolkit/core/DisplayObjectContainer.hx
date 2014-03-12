@@ -1,15 +1,17 @@
 package haxe.ui.toolkit.core;
 
 import flash.display.Sprite;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.core.interfaces.IDisplayObjectContainer;
 import haxe.ui.toolkit.core.interfaces.ILayout;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
+import haxe.ui.toolkit.events.UIEvent;
 import haxe.ui.toolkit.layout.DefaultLayout;
 
 import haxe.CallStack;
 
-class DisplayObjectContainer extends DisplayObject implements IDisplayObjectContainer {
+class DisplayObjectContainer extends DisplayObject implements IDisplayObjectContainer implements IClonable<DisplayObjectContainer> {
 	private var _children:Array<IDisplayObject>;
 	
 	// used in IDisplayObjectContainer getters/setters
@@ -66,6 +68,7 @@ class DisplayObjectContainer extends DisplayObject implements IDisplayObjectCont
 	public var numChildren(get, null):Int;
 	public var layout(get, set):ILayout;
 	public var children(get, null):Array<IDisplayObject>;
+	@:clonable
 	public var autoSize(get, set):Bool;
 	
 	private function get_numChildren():Int {
@@ -259,6 +262,17 @@ class DisplayObjectContainer extends DisplayObject implements IDisplayObjectCont
 		return cast match;
 	}
 	
+	public function findComponentUnderPoint(stageX:Float, stageY:Float):IDisplayObject {
+		var c:IDisplayObject = null;
+		for (child in children) {
+			if (child.hitTest(stageX, stageY) == true) {
+				c = child;
+				break;
+			}
+		}
+		return c;
+	}
+	
 	private function get_layout():ILayout {
 		return _layout;
 	}
@@ -302,5 +316,4 @@ class DisplayObjectContainer extends DisplayObject implements IDisplayObjectCont
 		}
 		return value;
 	}
-	
 }

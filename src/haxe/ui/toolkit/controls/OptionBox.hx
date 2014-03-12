@@ -5,18 +5,16 @@ import flash.events.MouseEvent;
 import haxe.ds.StringMap;
 import haxe.ui.toolkit.core.base.VerticalAlign;
 import haxe.ui.toolkit.core.Component;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.layout.HorizontalLayout;
 import haxe.ui.toolkit.style.Style;
 
 /**
  Simple two state option control (supports groups)
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the option group has changed
  **/
 
-class OptionBox extends Component {
+@:event("UIEvent.CHANGE", "Dispatched when the value of the option box is modified") 
+class OptionBox extends Component implements IClonable<OptionBox> {
 	private var _value:OptionBoxValue;
 	private var _label:Text;
 	
@@ -74,10 +72,12 @@ class OptionBox extends Component {
 	/**
 	 Defines whether the option is checked or not, if set to `true` then other options of the same group will be deselected.
 	 **/
+	@:clonable
 	public var selected(get, set):Bool;
 	/**
 	 Defines the group for this option. Options belonging to the same group will only ever have a single option selected.
 	 **/
+	@:clonable
 	public var group(get, set):String;
 	
 	private function get_selected():Bool {
@@ -170,7 +170,8 @@ class OptionBox extends Component {
 	}
 }
 
-private class OptionBoxValue extends Value {
+@exclude
+class OptionBoxValue extends Value implements IClonable<OptionBoxValue> {
 	public function new() {
 		super();
 		_value = "unselected";

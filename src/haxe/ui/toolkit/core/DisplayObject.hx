@@ -3,7 +3,9 @@ package haxe.ui.toolkit.core;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.MouseEvent;
 import haxe.ds.StringMap;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.core.interfaces.IDisplayObjectContainer;
 import haxe.ui.toolkit.core.interfaces.IDrawable;
@@ -19,7 +21,14 @@ import haxe.ui.toolkit.util.StringUtil;
 	"added", "addedToStage", "removed", "removedFromStage", "activate", "deactivate",
 	"glyphClick"
 ]))
-class DisplayObject implements IEventDispatcher implements IDisplayObject implements IDrawable {
+@:build(haxe.ui.toolkit.core.Macros.addClonable())
+@:autoBuild(haxe.ui.toolkit.core.Macros.addClonable())
+@:event("UIEvent.INIT", "Dispatched when the display object has been initialized")
+@:event("UIEvent.READY", "Dispatched when the display object is ready")
+@:event("UIEvent.ADDED_TO_STAGE", "Dispatched when a display object is added to the on stage display list")
+@:event("UIEvent.REMOVED_FROM_STAGE", "Dispatched when a display object is about to be removed from the display list")
+@:event("UIEvent.RESIZE", "Dispatched when the display object has been resized")
+class DisplayObject implements IEventDispatcher implements IDisplayObject implements IDrawable implements IClonable<DisplayObject> {
 	// used in IDisplayObject getters/setters
 	private var _parent:IDisplayObjectContainer;
 	private var _root:Root;
@@ -79,19 +88,28 @@ class DisplayObject implements IEventDispatcher implements IDisplayObject implem
 	//******************************************************************************************
 	public var parent(get, set):IDisplayObjectContainer;
 	public var root(get, set):Root;
+	@:clonable
 	public var id(get, set):String;
+	@:clonable
 	public var x(get, set):Float;
+	@:clonable
 	public var y(get, set):Float;
+	@:clonable
 	public var width(get, set):Float;
+	@:clonable
 	public var height(get, set):Float;
+	@:clonable
 	public var percentWidth(get, set):Float;
+	@:clonable
 	public var percentHeight(get, set):Float;
 	public var ready(get, null):Bool;
 	public var sprite(get, null):Sprite;
 	public var stageX(get, null):Float;
 	public var stageY(get, null):Float;
 	public var visible(get, set):Bool;
+	@:clonable
 	public var horizontalAlign(get, set):String;
+	@:clonable
 	public var verticalAlign(get, set):String;
 	
 	private function get_parent():IDisplayObjectContainer {
@@ -324,7 +342,13 @@ class DisplayObject implements IEventDispatcher implements IDisplayObject implem
 	}
 	
 	private function interceptEvent(event:Event):Void {
-		dispatchEvent(new UIEvent(UIEvent.PREFIX + event.type));
+		var uiEvent:UIEvent = new UIEvent(UIEvent.PREFIX + event.type);
+		if (Std.is(event, MouseEvent)) {
+			var mouseEvent:MouseEvent = cast event;
+			uiEvent.stageX = mouseEvent.stageX;
+			uiEvent.stageY = mouseEvent.stageY;
+		}
+		dispatchEvent(uiEvent);
 	}
 	
 	//******************************************************************************************
@@ -448,7 +472,8 @@ class DisplayObject implements IEventDispatcher implements IDisplayObject implem
 		var fnName:String = "on" + StringUtil.capitalizeFirstLetter(StringTools.replace(event.type, UIEvent.PREFIX, ""));
 		var fn:UIEvent->Void = Reflect.field(this, fnName);
 		if (fn != null) {
-			var fnEvent:UIEvent = new UIEvent(UIEvent.PREFIX + event.type); 
+			var fnEvent:UIEvent = new UIEvent(UIEvent.PREFIX + event.type, event.component); 
+			fnEvent.data = event.data;
 			fnEvent.displayObject = this;
 			fn(fnEvent);
 		}
