@@ -1,8 +1,10 @@
 package haxe.ui.toolkit.layout;
+
 import haxe.ui.toolkit.core.base.HorizontalAlign;
 import haxe.ui.toolkit.core.base.VerticalAlign;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 
-class GridLayout extends Layout {
+class GridLayout extends Layout implements IClonable<Layout> {
 	private var _columns:Int = 1;
 	
 	public function new() {
@@ -12,6 +14,7 @@ class GridLayout extends Layout {
 	//******************************************************************************************
 	// Getters/settings
 	//******************************************************************************************
+	@:clonable
 	public var columns(get, set):Int;
 	
 	private function get_columns():Int {
@@ -270,5 +273,4 @@ class GridLayout extends Layout {
 		}
 		return rowHeights;
 	}
-	
 }

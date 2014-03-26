@@ -5,12 +5,9 @@ import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.DisplayObject;
 import haxe.ui.toolkit.core.DisplayObjectContainer;
 import haxe.ui.toolkit.core.interfaces.IDisplayObjectContainer;
-import haxe.ui.toolkit.core.interfaces.IStyleable;
-import haxe.ui.toolkit.core.Macros;
+import haxe.ui.toolkit.core.interfaces.IStyleableDisplayObject;
 import haxe.ui.toolkit.core.StateComponent;
 import haxe.ui.toolkit.core.StyleableDisplayObject;
-import haxe.ui.toolkit.resources.ResourceManager;
-import haxe.ui.toolkit.util.PerfTimer;
 
 class StyleManager {
 	private static var _instance:StyleManager;
@@ -115,8 +112,8 @@ class StyleManager {
 		}
 		var id:String = c.id;
 		var styleName:String = null;
-		if (Std.is(c, IStyleable)) {
-			styleName = cast(c, IStyleable).styleName;
+		if (Std.is(c, IStyleableDisplayObject)) {
+			styleName = cast(c, IStyleableDisplayObject).styleName;
 		}
 		
 		var rulePartId:String = rulePart.id;
@@ -165,8 +162,8 @@ class StyleManager {
 		}
 		var id:String = c.id;
 		var styleName:String = null;
-		if (Std.is(c, IStyleable)) {
-			styleName = cast(c, IStyleable).styleName;
+		if (Std.is(c, IStyleableDisplayObject)) {
+			styleName = cast(c, IStyleableDisplayObject).styleName;
 		}
 		
 		var styleRule:StyleRule = _styles.get(rule);
@@ -279,8 +276,8 @@ class StyleManager {
 
 		var id:String = c.id;
 		var styleName:String = null;
-		if (Std.is(c, IStyleable)) {
-			styleName = cast(c, IStyleable).styleName;
+		if (Std.is(c, IStyleableDisplayObject)) {
+			styleName = cast(c, IStyleableDisplayObject).styleName;
 		}
 		
 		var s:String = className;

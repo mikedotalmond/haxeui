@@ -6,13 +6,13 @@ import flash.geom.Rectangle;
 import haxe.ds.StringMap.StringMap;
 import haxe.ui.toolkit.core.base.State;
 import haxe.ui.toolkit.core.Client;
+import haxe.ui.toolkit.core.interfaces.IClonable;
+import haxe.ui.toolkit.core.interfaces.IComponent;
 import haxe.ui.toolkit.core.interfaces.IDraggable;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
 import haxe.ui.toolkit.resources.ResourceManager;
-import haxe.ui.toolkit.style.Style;
-import haxe.ui.toolkit.style.StyleManager;
 
-class Component extends StyleableDisplayObject {
+class Component extends StyleableDisplayObject implements IComponent implements IClonable<StyleableDisplayObject> {
 	private var _text:String;
 	private var _clipContent:Bool = false;
 	private var _disabled:Bool = false;
@@ -53,12 +53,17 @@ class Component extends StyleableDisplayObject {
 	//******************************************************************************************
 	// Component methods/properties
 	//******************************************************************************************
+	@:clonable
 	public var text(get, set):String;
 	public var clipWidth(get, set):Float;
 	public var clipHeight(get, set):Float;
 	public var clipContent(get, set):Bool;
+	@:clonable
 	public var disabled(get, set):Bool;
+	@:clonable
 	public var userData(default, default):Dynamic;
+	@:clonable
+	public var value(get, set):Dynamic;
 	
 	private function get_text():String {
 		return _text;
@@ -178,7 +183,16 @@ class Component extends StyleableDisplayObject {
 		
 		return value;
 	}
-	 
+	
+	private function get_value():Dynamic {
+		return text;
+	}
+	
+	private function set_value(newValue:Dynamic):Dynamic {
+		text = newValue;
+		return newValue;
+	}
+	
 	//******************************************************************************************
 	// Event dispatcher overrides
 	//******************************************************************************************

@@ -1,35 +1,30 @@
 package haxe.ui.toolkit;
 
-import haxe.ui.toolkit.controls.Button;
-import haxe.ui.toolkit.controls.Text;
-import haxe.ui.toolkit.core.Macros;
+import haxe.ui.toolkit.containers.Accordion;
+import haxe.ui.toolkit.containers.Stack;
 import haxe.ui.toolkit.core.Root;
 import haxe.ui.toolkit.core.Toolkit;
+import haxe.ui.toolkit.themes.DefaultTheme;
+import haxe.ui.toolkit.themes.GradientTheme;
+import haxe.ui.toolkit.themes.WindowsTheme;
 
 class Main {
 	public static function main() {
-		#if android
-			Macros.addStyleSheet("assets/styles/gradient/gradient_mobile.css");
-		#else
-			Macros.addStyleSheet("assets/styles/gradient/gradient.css");
-		#end
+		Toolkit.defaultTransition = "none";
+		Toolkit.setTransitionForClass(Accordion, "slide");
+		Toolkit.setTransitionForClass(Stack, "fade");
+		Toolkit.theme = new DefaultTheme();
+		//Toolkit.theme = new WindowsTheme();
+		//Toolkit.theme = new GradientTheme();
+		//Macros.addStyleSheet("assets/test.css");
 		Toolkit.init();
 		Toolkit.openFullscreen(function(root:Root) {
+			/*
 			var t:TestController = new TestController();
 			root.addChild(t.view);
-			//var button:Button = new Button();
-			//button.x = 100;
-			//button.y = 100;
-			//button.width = 100;
-			//button.height = 100;
-			//button.text = "Test Button";
-			//root.addChild(button);
-
-			/*
-			var s:Text = new Text();
-			s.text = "Bob";
-			root.addChild(s);
 			*/
+			var t2:TestController2 = new TestController2();
+			root.addChild(t2.view);
 		});
 	}
 }

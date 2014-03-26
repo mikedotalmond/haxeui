@@ -1,24 +1,21 @@
 package haxe.ui.toolkit.controls;
 
 import flash.display.DisplayObject;
-import flash.display.Sprite;
 import flash.events.Event;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import haxe.ui.toolkit.core.base.State;
-import haxe.ui.toolkit.core.Component;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
-import haxe.ui.toolkit.core.interfaces.IStyleable;
 import haxe.ui.toolkit.core.StateComponent;
-import haxe.ui.toolkit.style.Style;
+import haxe.ui.toolkit.layout.DefaultLayout;
 import haxe.ui.toolkit.text.ITextDisplay;
 import haxe.ui.toolkit.text.TextDisplay;
-import haxe.ui.toolkit.layout.DefaultLayout;
 
 /**
  Generic editable text component (supports multiline text)
  **/
-class TextInput extends StateComponent {
+class TextInput extends StateComponent implements IClonable<TextInput> {
 	private var _textDisplay:ITextDisplay;
 	private var _textPlaceHolder:Text;
 	
@@ -150,6 +147,7 @@ class TextInput extends StateComponent {
 		if (_textDisplay != null) {
 			_textDisplay.style = style;
 		}
+		/*
 		if (_textPlaceHolder != null) {
 			var placeholderStyle:Style = new Style();
 			placeholderStyle.merge(style);
@@ -159,6 +157,7 @@ class TextInput extends StateComponent {
 			placeholderStyle.padding = 0;
 			_textPlaceHolder.style = placeholderStyle;
 		}
+		*/
 	}
 	
 	//******************************************************************************************
@@ -167,6 +166,7 @@ class TextInput extends StateComponent {
 	/**
 	 Defines whether or not the text can span more than a single line. Vertical and horizontal scrollbars will be added as needed.
 	 **/
+	@:clonable
 	public var multiline(get, set):Bool;
 	/**
 	 The start position of the selected text
@@ -180,10 +180,13 @@ class TextInput extends StateComponent {
 	 Sets the currently selected text (if available) to the specified text format
 	 **/
 	public var selectedTextFormat(get, null):TextFormat;
+	@:clonable
 	public var wrapLines(get, set):Bool;
+	@:clonable
 	public var displayAsPassword(get, set):Bool;
+	@:clonable
 	public var placeholderText(get, set):String;
-	
+
 	private function get_multiline():Bool {
 		return _textDisplay.multiline;
 	}
@@ -249,7 +252,6 @@ class TextInput extends StateComponent {
 		}
 		_textPlaceHolder.text = value;
 		if (_ready && contains(_textPlaceHolder) == false && value != null) {
-			trace("addding");
 			addChild(_textPlaceHolder);
 		}
 		if (value == null) {
@@ -263,6 +265,39 @@ class TextInput extends StateComponent {
 		}
 		return value;
 	}
+	
+	public var vscrollPos(get, set):Float;
+	public var vscrollMin(get, null):Float;
+	public var vscrollMax(get, null):Float;
+	
+	private function get_vscrollPos():Float {
+		if (_vscroll != null) {
+			return _vscroll.pos;
+		}
+		return 0;
+	}
+	
+	private function set_vscrollPos(value:Float) {
+		if (_vscroll != null) {
+			_vscroll.pos = value;
+		}
+		return value;
+	}
+
+	private function get_vscrollMin():Float {
+		if (_vscroll != null) {
+			return _vscroll.min;
+		}
+		return 0;
+	}
+	
+	private function get_vscrollMax():Float {
+		if (_vscroll != null) {
+			return _vscroll.max;
+		}
+		return 0;
+	}
+	
 	//******************************************************************************************
 	// Helpers
 	//******************************************************************************************
@@ -333,7 +368,8 @@ class TextInput extends StateComponent {
 	}
 }
 
-private class TextInputLayout extends DefaultLayout {
+@exclude
+class TextInputLayout extends DefaultLayout {
 	public function new() {
 		super();
 	}

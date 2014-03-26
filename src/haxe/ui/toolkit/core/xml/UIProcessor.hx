@@ -1,6 +1,5 @@
 package haxe.ui.toolkit.core.xml;
 
-import flash.xml.XML;
 import haxe.ui.toolkit.core.ClassManager;
 import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.interfaces.IDataComponent;
@@ -35,6 +34,7 @@ class UIProcessor extends XMLProcessor {
 		if (n != -1) {
 			nodeName = nodeName.substr(n + 1, nodeName.length);
 		}
+		nodeName = nodeName.toLowerCase();
 		
 		var className:String = ClassManager.instance.getComponentClassName(nodeName);
 		var direction:String = node.get("direction");

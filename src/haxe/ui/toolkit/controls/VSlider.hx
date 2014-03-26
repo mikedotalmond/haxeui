@@ -1,18 +1,14 @@
 package haxe.ui.toolkit.controls;
 
 import flash.events.MouseEvent;
-import flash.geom.Point;
 import haxe.ui.toolkit.core.interfaces.Direction;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.Screen;
 
 /**
  Vertical slider bar control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the progess bar has changed
  **/
-class VSlider extends Slider {
+class VSlider extends Slider implements IClonable<VSlider> {
 	public function new() {
 		super();
 		direction = Direction.VERTICAL;

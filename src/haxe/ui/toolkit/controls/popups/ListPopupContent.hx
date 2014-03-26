@@ -1,11 +1,12 @@
 package haxe.ui.toolkit.controls.popups;
 
-import flash.events.Event;
 import flash.events.TimerEvent;
 import flash.utils.Timer;
 import haxe.ui.toolkit.containers.ListView;
+import haxe.ui.toolkit.core.interfaces.IItemRenderer;
 import haxe.ui.toolkit.core.PopupManager;
 import haxe.ui.toolkit.data.IDataSource;
+import haxe.ui.toolkit.events.UIEvent;
 
 /**
  List content for list popups
@@ -19,7 +20,7 @@ class ListPopupContent extends PopupContent {
 	private var _fn:Dynamic->Void;
 	private var _selectedIndex:Int = -1;
 	
-	public function new(dataSource:IDataSource, selectedIndex:Int = -1, fn:Dynamic->Void) {
+	public function new(dataSource:IDataSource = null, selectedIndex:Int = -1, fn:Dynamic->Void = null) {
 		super();
 		
 		_selectedIndex = selectedIndex;
@@ -36,7 +37,7 @@ class ListPopupContent extends PopupContent {
 	private override function initialize():Void {
 		super.initialize();
 
-		_list.addEventListener(Event.CHANGE, _onListChange);
+		_list.addEventListener(UIEvent.CHANGE, _onListChange);
 		
 		addChild(_list);
 		var n:Int = _maxListSize;
@@ -82,8 +83,13 @@ class ListPopupContent extends PopupContent {
 	//******************************************************************************************
 	// Event handlers
 	//******************************************************************************************
-	private function _onListChange(event:Event):Void {
-		hideTimer = new Timer(400, 1);
+	#if mobile
+	private var DELAY:Int = 400;
+	#else
+	private var DELAY:Int = 0;
+	#end
+	private function _onListChange(event:UIEvent):Void {
+		hideTimer = new Timer(DELAY, 1);
 		hideTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 		hideTimer.start();
 	}
@@ -93,14 +99,11 @@ class ListPopupContent extends PopupContent {
 		if (Std.is(parent, Popup)) {
 			PopupManager.instance.hidePopup(cast(parent, Popup));
 		}
-		
+
 		if (_fn != null) {
-			var item:ListViewItem = _list.selectedItems[0];
-			var index:Int = Lambda.indexOf(_list.selectedItems, item);
-			var param:Dynamic = {
-				text: item.text,
-				index: index,
-			};
+			var item:IItemRenderer = _list.selectedItems[0];
+			var index:Int = _list.getItemIndex(item);
+			item.data.index = index;
 			_fn(item);
 		}
 	}

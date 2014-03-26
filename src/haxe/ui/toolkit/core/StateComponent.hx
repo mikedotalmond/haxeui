@@ -1,11 +1,12 @@
 package haxe.ui.toolkit.core;
 
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
 import haxe.ui.toolkit.core.interfaces.IStateComponent;
 import haxe.ui.toolkit.style.Style;
 import haxe.ui.toolkit.style.StyleManager;
 
-class StateComponent extends Component implements IStateComponent {
+class StateComponent extends Component implements IStateComponent implements IClonable<StateComponent> {
 	private var _state:String;
 	private var _states:Array<String>;
 	
@@ -27,18 +28,28 @@ class StateComponent extends Component implements IStateComponent {
 		}
 	}
 	
-	public function addStates(stateNames:Array<String>):Void {
+	public function addStates(stateNames:Array<String>, rebuildStyles:Bool = true):Void {
 		for (stateName in stateNames) {
-			_states.push(stateName);
+			addState(stateName, false);
 		}
-		if (_ready) {
+		if (rebuildStyles == true && _ready) {
 			buildStyles();
+		}
+	}
+	
+	public function addState(stateName:String, rebuildStyles:Bool = true):Void {
+		if (hasState(stateName) == false) {
+			_states.push(stateName);
+			if (rebuildStyles == true && _ready) {
+				buildStyles();
+			}
 		}
 	}
 	
 	//******************************************************************************************
 	// IState
 	//******************************************************************************************
+	@:clonable
 	public var state(get, set):String;
 	public var states(get, null):Array<String>;
 	

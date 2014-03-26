@@ -5,9 +5,8 @@ import flash.events.KeyboardEvent;
 import flash.text.TextField;
 import haxe.ui.toolkit.controls.extended.syntax.CodeSyntax;
 import haxe.ui.toolkit.controls.TextInput;
-import haxe.ui.toolkit.resources.ResourceManager;
-import haxe.ui.toolkit.util.psuedothreads.AsyncThreadCaller;
-import haxe.ui.toolkit.util.psuedothreads.Runner;
+import haxe.ui.toolkit.util.pseudothreads.AsyncThreadCaller;
+import haxe.ui.toolkit.util.pseudothreads.Runner;
 
 /**
  Simple regex based syntax highlighting component

@@ -3,15 +3,15 @@ package haxe.ui.toolkit.controls.selection;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.filters.DropShadowFilter;
-import flash.geom.Rectangle;
 import haxe.ui.toolkit.containers.ListView;
 import haxe.ui.toolkit.controls.Button;
-import haxe.ui.toolkit.core.interfaces.IEventDispatcher;
+import haxe.ui.toolkit.core.interfaces.IDataComponent;
+import haxe.ui.toolkit.core.interfaces.IItemRenderer;
 import haxe.ui.toolkit.core.PopupManager;
 import haxe.ui.toolkit.core.Toolkit;
 import haxe.ui.toolkit.data.ArrayDataSource;
 import haxe.ui.toolkit.data.IDataSource;
-import haxe.ui.toolkit.core.interfaces.IDataComponent;
+import haxe.ui.toolkit.events.UIEvent;
 import motion.Actuate;
 import motion.easing.Linear;
 
@@ -29,7 +29,7 @@ import motion.easing.Linear;
  
  **/
 
-class List extends Button implements IDataComponent {
+class ListSelector extends Button implements IDataComponent {
 	private var _dataSource:IDataSource;
 	private var _list:ListView;
 	
@@ -37,13 +37,15 @@ class List extends Button implements IDataComponent {
 	private var _method:String = "";
 	
 	private var _selectedIndex:Int = -1;
-	private var _selectedItems:Array<ListViewItem>;
+	private var _selectedItems:Array<IItemRenderer>;
 	
 	//private var _transition:String = "slide";
 	
 	public function new() {
 		super();
 		toggle = true;
+		allowSelection = false;
+		dispatchChangeEvents = false;
 	}
 	
 	//******************************************************************************************
@@ -65,7 +67,7 @@ class List extends Button implements IDataComponent {
 	}
 	
 	private override function _onMouseClick(event:MouseEvent):Void {
-		super._onMouseClick(event);
+		//super._onMouseClick(event);
 		if (_list == null || _list.visible == false) {
 			showList();
 		} else {
@@ -111,18 +113,19 @@ class List extends Button implements IDataComponent {
 	 **/
 	public function showList():Void {
 		if (_method == "popup") {
-			PopupManager.instance.showList(root, dataSource, "Select", _selectedIndex, true, function(item:ListViewItem) {
-				this.text = item.text;
-				_selectedItems = new Array<ListViewItem>();
+			PopupManager.instance.showList(dataSource, _selectedIndex, "Select Item", { }, function(item:IItemRenderer) {
+				_selectedIndex = item.data.index;
+				this.text = item.data.text;
+				_selectedItems = new Array<IItemRenderer>();
 				_selectedItems.push(item);
 				this.selected = false;
-				var event:Event = new Event(Event.CHANGE);
+				var event:UIEvent = new UIEvent(UIEvent.CHANGE);
 				dispatchEvent(event);
 			});
 		} else {
 			if (_list == null) {
 				_list = new ListView();
-				_list.addEventListener(Event.CHANGE, _onListChange);
+				_list.addEventListener(UIEvent.CHANGE, _onListChange);
 				_list.content.addEventListener(Event.ADDED_TO_STAGE, function(e) {
 					showList();
 				});
@@ -152,7 +155,7 @@ class List extends Button implements IDataComponent {
 			_list.height = listHeight;
 			_list.setSelectedIndexNoEvent(_selectedIndex);
 
-			var transition:String = Toolkit.getTransitionForClass(List);
+			var transition:String = Toolkit.getTransitionForClass(ListSelector);
 			if (transition == "slide") {
 				_list.clipHeight = 0;
 				_list.sprite.alpha = 1;
@@ -179,7 +182,7 @@ class List extends Button implements IDataComponent {
 	 **/
 	public function hideList():Void {
 		if (_list != null) {
-			var transition:String = Toolkit.getTransitionForClass(List);
+			var transition:String = Toolkit.getTransitionForClass(ListSelector);
 			if (transition == "slide") {
 				_list.sprite.alpha = 1;
 				Actuate.tween(_list, .1, { clipHeight: 0 }, true).ease(Linear.easeNone).onComplete(function() {
@@ -226,9 +229,9 @@ class List extends Button implements IDataComponent {
 	/**
 	 Returns an array of the selected list items
 	 **/
-	public var selectedItems(get, null):Array<ListViewItem>;
+	public var selectedItems(get, null):Array<IItemRenderer>;
 	
-	private function get_selectedItems():Array<ListViewItem> {
+	private function get_selectedItems():Array<IItemRenderer> {
 		return _selectedItems;
 	}
 	
@@ -275,20 +278,20 @@ class List extends Button implements IDataComponent {
 		}
 	}
 	
-	private function _onListChange(event:Event):Void {
+	private function _onListChange(event:UIEvent):Void {
 		if (_list.selectedItems != null && _list.selectedItems.length > 0) {
-			this.text = _list.selectedItems[0].text;
+			this.text = _list.selectedItems[0].data.text;
 			_selectedIndex = _list.selectedIndex;
 			_selectedItems = _list.selectedItems;
 			hideList();
 			
-			var event:Event = new Event(Event.CHANGE);
+			var event:UIEvent = new UIEvent(UIEvent.CHANGE);
 			dispatchEvent(event);
 		}
 	}
 }
 
-private class DropDownList extends ListView {
+class DropDownList extends ListView {
 	public function new() {
 		super();
 	}

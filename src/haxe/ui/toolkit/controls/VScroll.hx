@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
 import flash.utils.Timer;
+import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.core.interfaces.InvalidationFlag;
 import haxe.ui.toolkit.core.interfaces.IScrollable;
@@ -13,13 +14,9 @@ import haxe.ui.toolkit.layout.DefaultLayout;
 
 /**
  Vertical scrollbar control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the slider bar has changed
  **/
  
-class VScroll extends Scroll implements IScrollable {
+class VScroll extends Scroll implements IScrollable implements IClonable<VScroll> {
 	private var _pos:Float = 0;
 	private var _min:Float = 0;
 	private var _max:Float = 100;
@@ -189,22 +186,27 @@ class VScroll extends Scroll implements IScrollable {
 	/**
 	 Value of the scrollbar
 	 **/
+	@:clonable
 	public var pos(get, set):Float;
 	/**
 	 Minimum value allowed for the scrollbar
 	 **/
+	@:clonable
 	public var min(get, set):Float;
 	/**
 	 Maximum value allowed for the scrollbar
 	 **/
+	@:clonable
 	public var max(get, set):Float;
 	/**
 	 The size of one page for the scrollbar (affects the size of the thumb)
 	 **/
+	@:clonable
 	public var pageSize(get, set):Float;
 	/**
 	 How much the scrollbar should increment (or deincrement) when using the scroll buttons
 	 **/
+	@:clonable
 	public var incrementSize(get, set):Float;
 	
 	private function get_pos():Float {
@@ -296,7 +298,8 @@ class VScroll extends Scroll implements IScrollable {
 	}
 }
 
-private class VScrollLayout extends DefaultLayout {
+@exclude
+class VScrollLayout extends DefaultLayout {
 	public function new() {
 		super();
 	}

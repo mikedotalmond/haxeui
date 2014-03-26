@@ -1,18 +1,14 @@
 package haxe.ui.toolkit.controls;
 
 import flash.events.MouseEvent;
-import flash.geom.Point;
-import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.interfaces.Direction;
 import haxe.ui.toolkit.core.Screen;
 
 /**
  Slider bar control
- 
- <b>Events:</b>
- 
- * `Event.CHANGE` - Dispatched when value of the slider bar has changed
  **/
+ 
+@:event("UIEvent.CHANGE", "Dispatched when the value of the slider changes") 
 class Slider extends Progress {
 	private var _thumb:Button;
 	
@@ -39,6 +35,15 @@ class Slider extends Progress {
 		
 		addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
 		addEventListener(MouseEvent.MOUSE_DOWN, _onBackgroundMouseDown);
+	}
+	
+	private override function get_value():Dynamic {
+		return pos;
+	}
+	
+	private override function set_value(newValue:Dynamic):Dynamic {
+		pos = Std.parseFloat(newValue);
+		return newValue;
 	}
 	
 	//******************************************************************************************

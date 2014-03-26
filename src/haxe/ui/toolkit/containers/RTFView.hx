@@ -3,22 +3,18 @@ package haxe.ui.toolkit.containers;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.Font;
-import flash.ui.Mouse;
 import haxe.ui.toolkit.controls.Button;
 import haxe.ui.toolkit.controls.extended.RTF;
-import haxe.ui.toolkit.controls.selection.List;
+import haxe.ui.toolkit.controls.selection.ListSelector;
 import haxe.ui.toolkit.controls.Spacer;
-import haxe.ui.toolkit.controls.TextInput;
-import haxe.ui.toolkit.data.ArrayDataSource;
-import haxe.ui.toolkit.resources.ResourceManager;
 
 /**
  Rich text editor container (contains style controls)
  **/
 class RTFView extends VBox {
 	private var _rtf:RTF;
-	private var _fontNameList:List;
-	private var _fontSizeList:List;
+	private var _fontNameList:ListSelector;
+	private var _fontSizeList:ListSelector;
 	
 	private var _boldButton:RTFToolButton;
 	private var _italicButton:RTFToolButton;
@@ -48,10 +44,11 @@ class RTFView extends VBox {
 
 		var hbox:HBox = new HBox();
 		
-		_fontNameList = new List();
+		_fontNameList = new ListSelector();
 		_fontNameList.width = 200;
 		_fontNameList.text = "_sans";
 		if (_systemFonts == true) {
+			#if !html5
 			var fonts:Array<Font> = Font.enumerateFonts(true);
 			fonts.sort(function(f1:Font, f2:Font):Int {
 				var a = f1.fontName.toLowerCase();
@@ -64,6 +61,7 @@ class RTFView extends VBox {
 			for (font in fonts) {
 				_fontNameList.dataSource.add( { text: font.fontName } );
 			}
+			#end
 		} else {
 			_fontNameList.dataSource.add( { text: "_sans" } );
 			_fontNameList.dataSource.add( { text: "_serif" } );
@@ -81,7 +79,7 @@ class RTFView extends VBox {
 		_fontNameList.addEventListener(Event.CHANGE, _onFontNameChange);
 		hbox.addChild(_fontNameList);
 		
-		_fontSizeList = new List();
+		_fontSizeList = new ListSelector();
 		_fontSizeList.text = "13";
 		_fontSizeList.dataSource.add( { text:10 } );
 		_fontSizeList.dataSource.add( { text:12 } );
@@ -204,14 +202,18 @@ class RTFView extends VBox {
 	}
 	
 	private function _onFontNameChange(event:Event):Void {
+		/*
 		var item:ListView.ListViewItem = _fontNameList.selectedItems[0];
 		_rtf.fontName(item.text);
+		*/
 	}
 	
 	private function _onFontSizeChange(event:Event):Void {
+		/*
 		var item:ListView.ListViewItem = _fontSizeList.selectedItems[0];
 		var size:Int = Std.parseInt(item.text);
 		_rtf.fontSize(size);
+		*/
 	}
 	
 	private function _onLeftAlignClick(event:Event):Void {
@@ -231,6 +233,7 @@ class RTFView extends VBox {
 	}
 }
 
-private class RTFToolButton extends Button { // for styling
+@exclude
+class RTFToolButton extends Button { // for styling
 	
 }

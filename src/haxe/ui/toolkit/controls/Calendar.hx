@@ -4,10 +4,8 @@ package haxe.ui.toolkit.controls;
  Inspired from: https://github.com/minimalcomps/minimalcomps/blob/master/src/com/bit101/components/Calendar.as
  **/
 
-import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import haxe.ui.toolkit.containers.Grid;
 import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.layout.Layout;
@@ -146,13 +144,15 @@ class Calendar extends Component {
 	}
 }
 
-private class CalendarDay extends Button {
+@exclude
+class CalendarDay extends Button {
 	public function new() {
 		super();
 	}
 }
 
-private class CalendarLayout extends Layout {
+@exclude
+class CalendarLayout extends Layout {
 	public function new() {
 		super();
 	}

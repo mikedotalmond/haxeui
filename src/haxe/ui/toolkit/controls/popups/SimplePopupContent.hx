@@ -8,11 +8,15 @@ import haxe.ui.toolkit.controls.Text;
 class SimplePopupContent extends PopupContent {
 	private var _textControl:Text;
 	
-	public function new(text:String) {
+	public function new(text:String = "") {
 		super();
-		_autoSize = false;
+		_autoSize = true;
 		_textControl = new Text();
+		_textControl.multiline = true;
+		_textControl.wrapLines = true;
+		_textControl.percentWidth = 100;
 		_textControl.text = text;
+		_textControl.autoSize = false;
 	}
 	
 	//******************************************************************************************
@@ -21,6 +25,6 @@ class SimplePopupContent extends PopupContent {
 	private override function initialize():Void {
 		super.initialize();
 		addChild(_textControl);
-		height = _textControl.height;
+		//height = _textControl.height + 10;
 	}
 }
