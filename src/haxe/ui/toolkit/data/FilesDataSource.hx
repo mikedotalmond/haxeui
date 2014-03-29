@@ -39,7 +39,7 @@ class FilesDataSource extends ArrayDataSource {
 			
 			if (showParentDirectory) {
 				if (currentIsRoot) {
-					add({ icon:'assets/ui/icons/bullet_arrow_up_faded.png', text:'/', isParent:false});
+					add({ icon:'assets/ui/icons/bullet_arrow_up_faded.png', text:'/', isParent:false, selectable:false});
 				} else { 
 					add({ icon:'assets/ui/icons/bullet_arrow_up.png', text:'${dir.substring(dir.lastIndexOf("/") + 1)}', isParent:true});
 				}
@@ -59,7 +59,7 @@ class FilesDataSource extends ArrayDataSource {
 			for (file in files) {
 				if (!isDir(dir + "/" + file)) {
 					if (showHiddenFiles || file.charAt(0) != '.') {
-						var o = { text: file, isFile:true, icon:'assets/ui/icons/page_white.png' };
+						var o = { text: file, isFile:true, icon:getFileIcon(file) };
 						add(o);
 					}
 				}
@@ -67,6 +67,18 @@ class FilesDataSource extends ArrayDataSource {
 		}
 		#end
 		return true;
+	}
+	
+	function getFileIcon(name:String) {
+		var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+		
+		return switch(ext) {
+			case 'png', 'jpg', 'jpeg':
+				'assets/ui/icons/picture.png';
+				
+			default: 
+				'assets/ui/icons/page_white.png';
+		}
 	}
 	
 	
