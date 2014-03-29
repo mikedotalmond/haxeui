@@ -32,13 +32,19 @@ class FilesDataSource extends ArrayDataSource {
 		}
 	}
 	
-	private override function _open():Bool {
+	override function _open():Bool {
 		#if !(flash || html5)
-		if (isDir(dir)) {
+		var currentIsRoot = isRoot(dir);
+		if (currentIsRoot || isDir(dir)) {
 			
-			if (!isRoot(dir) && showParentDirectory) {
-				add({ icon:'assets/ui/icons/bullet_arrow_up.png', isParent:true});
+			if (showParentDirectory) {
+				if (currentIsRoot) {
+					add({ icon:'assets/ui/icons/bullet_arrow_up_faded.png', text:'/', isParent:false});
+				} else { 
+					add({ icon:'assets/ui/icons/bullet_arrow_up.png', text:'${dir.substring(dir.lastIndexOf("/") + 1)}', isParent:true});
+				}
 			}
+			
 			
 			var files:Array<String> = FileSystem.readDirectory(dir);
 			for (file in files) {
@@ -78,14 +84,12 @@ class FilesDataSource extends ArrayDataSource {
 	
 	public function openSubdirectory(name:String):Bool {
 		#if !(flash || html5)
-		if (isDir(dir)) {
-			var path = '${dir}/${name}';
-			if (isDir(path)) {
-				dir = path;
-				removeAll();
-				_open();
-				return true;
-			}
+		var path = '${dir}/${name}';
+		if (isDir(path)) {
+			dir = path;
+			removeAll();
+			_open();
+			return true;
 		}
 		#end
 		return false;
@@ -114,7 +118,6 @@ class FilesDataSource extends ArrayDataSource {
 		
 		#if !(flash || html5)
 		try {
-			if (isRoot(dir)) dir += "/";
 			isDir = FileSystem.isDirectory(dir);
 		} catch (ex:Dynamic) {
 			isDir = false;
@@ -128,7 +131,8 @@ class FilesDataSource extends ArrayDataSource {
 		var isRoot:Bool = false;
 		
 		#if !(flash || html5)
-		isRoot = dir.split("/").length == 1;
+		var split = dir.split("/");
+		isRoot = split.length == 1 || (split.length == 2 && split[1] == "");
 		#end
 		
 		return isRoot;
