@@ -1,11 +1,11 @@
 package haxe.ui.toolkit.containers;
 
 import flash.events.Event;
+import haxe.ui.toolkit.controls.Button;
 import haxe.ui.toolkit.controls.TabBar;
 import haxe.ui.toolkit.core.Component;
 import haxe.ui.toolkit.core.interfaces.IDisplayObject;
 import haxe.ui.toolkit.events.UIEvent;
-import haxe.ui.toolkit.layout.HorizontalLayout;
 import haxe.ui.toolkit.layout.VerticalLayout;
 
 class TabView extends Component {
@@ -24,6 +24,7 @@ class TabView extends Component {
 		
 		_stack = new Stack();
 		_stack.percentWidth = _stack.percentHeight = 100;
+		_stack.styleName = "page";
 		addChild(_stack);
 	}
 
@@ -58,12 +59,12 @@ class TabView extends Component {
 		} else {
 			r = _stack.addChild(child);
 			var label:String = "";
-			var styleName:String = null;
+			//var styleName:String = null;
 			if (Std.is(child, Component)) {
 				label = cast(child, Component).text;
-				styleName = cast(child, Component).styleName;
+				//styleName = cast(child, Component).styleName;
 			}
-			_tabs.addTab(label).styleName = styleName;
+			_tabs.addTab(label);// .styleName = "page";
 		}
 		return r;
 	}
@@ -78,7 +79,7 @@ class TabView extends Component {
 			if (Std.is(child, Component)) {
 				label = cast(child, Component).text;
 			}
-			_tabs.addTab(label);
+			_tabs.addTab(label);// .styleName = "page";
 		}
 		return r;
 	}
@@ -122,6 +123,10 @@ class TabView extends Component {
 	public function removeTab(index:Int):Void {
 		_stack.removeChildAt(index);
 		_tabs.removeTab(index);
+	}
+	
+	public function getTabButton(index:Int):Button {
+		return cast _tabs.getTabButton(index);
 	}
 	
 	public function removeAllTabs():Void {
