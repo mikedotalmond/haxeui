@@ -11,6 +11,9 @@ class FilesDataSource extends ArrayDataSource {
 	public var showHiddenFiles(default, null):Bool = false;
 	public var showHiddenDirectories(default, null):Bool = false;
 	
+	public var fileFilter:EReg = null;// eg: ~/.(jpg|png|json|xml)$/i;
+    
+	
 	public function new() {
 		super();
 	}
@@ -59,13 +62,19 @@ class FilesDataSource extends ArrayDataSource {
 			for (file in files) {
 				if (!isDir(dir + "/" + file)) {
 					if (showHiddenFiles || file.charAt(0) != '.') {
-						var o = { text: file, isFile:true, icon:getFileIcon(file) };
-						add(o);
+						if (fileFilter == null || fileFilter.match(file)) {
+							var o = { text: file, isFile:true, icon:getFileIcon(file) };
+							add(o);
+						}
 					}
 				}
 			}
+			
+			return true;
 		}
+		return false;
 		#end
+		
 		return true;
 	}
 	
