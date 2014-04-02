@@ -12,7 +12,7 @@ class FilesDataSource extends ArrayDataSource {
 	public var showHiddenDirectories(default, null):Bool = false;
 	
 	public var fileFilter:EReg = null;// eg: ~/.(jpg|png|json|xml)$/i;
-    
+
 	
 	public function new() {
 		super();
@@ -35,6 +35,11 @@ class FilesDataSource extends ArrayDataSource {
 		}
 	}
 	
+	override function _update(o:Dynamic):Bool {
+		removeAll();
+		return open();
+	}
+	
 	override function _open():Bool {
 		#if !(flash || html5)
 		var currentIsRoot = isRoot(dir);
@@ -43,7 +48,7 @@ class FilesDataSource extends ArrayDataSource {
 			if (showParentDirectory) {
 				if (currentIsRoot) {
 					add({ icon:'assets/ui/icons/bullet_arrow_up_faded.png', text:'/', isParent:false, selectable:false});
-				} else { 
+				} else {
 					add({ icon:'assets/ui/icons/bullet_arrow_up.png', text:'${dir.substring(dir.lastIndexOf("/") + 1)}', isParent:true});
 				}
 			}
@@ -85,7 +90,7 @@ class FilesDataSource extends ArrayDataSource {
 			case 'png', 'jpg', 'jpeg':
 				'assets/ui/icons/picture.png';
 				
-			default: 
+			default:
 				'assets/ui/icons/page_white.png';
 		}
 	}
@@ -122,7 +127,7 @@ class FilesDataSource extends ArrayDataSource {
 	//******************************************************************************************
 	public override function createFromString(data:String = null, config:Dynamic = null):Void {
 		if (data != null) {
-			#if !(flash || html5) 
+			#if !(flash || html5)
 			dir = fixDir(FileSystem.fullPath(data));
 			#else
 			dir = fixDir(data);
