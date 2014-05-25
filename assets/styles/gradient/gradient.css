@@ -24,7 +24,7 @@ Text {
 	fontName: "_sans";
 }
 
-VBox, ContinuousBox, Box, HBox, Grid {
+VBox, ContinuousHBox, ContinuousVBox, Box, HBox, Grid {
 	borderColor: 0xa5b8da;
 	padding: 0;
 	spacing: 5;
@@ -359,13 +359,15 @@ HSlider #value:disabled {
 }
 
 HSlider Button {
-	width: 10;
+	width: 20;
 	height: 100%;
-	iconPosition: "center";
 	cornerRadius: 2;
+	icon: "styles/gradient/gripper_horizontal.png";
+	iconPosition: "center";
 }
 
 HSlider Button:disabled {
+	icon: "styles/gradient/gripper_horizontal_disabled.png";
 }
 
 VSlider {
@@ -406,7 +408,8 @@ VSlider #value:disabled {
 
 VSlider Button {
 	width: 100%;
-	height: 30;
+	height: 20;
+	cornerRadius: 2;
 	icon: "styles/gradient/gripper_vertical.png";
 	iconPosition: "center";
 }
@@ -699,7 +702,7 @@ Menu {
 	paddingRight: 2;
 	paddingTop: 2;
 	paddingBottom: 2;
-	width: 150;
+	width: 175;
 }
 
 MenuItem {
@@ -1096,8 +1099,8 @@ RTFView #alignJustify {
 }
 
 CalendarView {
-	width: 250;
-	height: 250;
+	width: 270;
+	height: 270;
 	spacingX: 5;
 	spacingY: 5;
 	paddingLeft: 5;
@@ -1111,9 +1114,13 @@ CalendarView {
 	filter: dropShadow(2, 45, 0x808080, 1, 4, 4, 1, 3);
 }
 
+CalendarView #currentMonthYear {
+	textAlign: "center";
+}
+
 Calendar {
-	width: 250;
-	height: 250;
+	width: 270;
+	height: 270;
 	spacingX: 2;
 	spacingY: 2;
 	paddingLeft: 0;

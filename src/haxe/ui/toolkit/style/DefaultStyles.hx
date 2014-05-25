@@ -70,6 +70,7 @@ class DefaultStyles extends Styles {
 			backgroundColorGradientEnd: 0xff7f04,
 			color: 0x222222,
 		} ));
+		
 		addStyle("Button:down", new Style( {
 			backgroundColor: 0xffa84c,
 			backgroundColorGradientEnd: 0xff7b0d,
@@ -147,14 +148,80 @@ class DefaultStyles extends Styles {
 			color: 0xAAAAAA,
 		} ));
 		
-		addStyle("ListSelector", new Style( {
+		addStyle("ListSelector, DateSelector", new Style( {
 			icon: "styles/default/up_down.png",
 			iconPosition: "right",
 			selectionMethod: "popup",
 			textAlign: "left"
 		} ));
+
+		addStyle("CalendarView, Calendar", new Style( {
+			width: 310,
+			height: 310,
+			spacing: 3,
+			padding: 2,
+			//autoSize: false,
+		} ));
+
+		addStyle("CalendarView", new Style( {
+			backgroundColor: 0x888888,
+			filter: new DropShadowFilter(1, 45, 0x222222, 1, 2, 2, 1, 3),
+			borderColor: 0x444444,
+			borderSize: 1,
+			cornerRadius: 2,
+			padding: 5,
+			spacing: 5,
+		} ));
 		
-	
+		addStyle("CalendarView Calendar", new Style( {
+			borderSize: 0,
+		} ));
+		
+		addStyle("CalendarPopupContent", new Style( {
+			padding: 50,
+		} ));
+		
+		addStyle("CalendarDay", new Style( {
+			padding: 0,
+			backgroundColor: 0xcccccc,
+			//borderSize: 0,
+			//cornerRadius: 0,
+			//filter: null,
+		} ));
+		
+		addStyle("CalendarView #currentMonthYear", new Style( {
+			textAlign: "center",
+		} ));
+		
+		addStyle("Calendar #selectedDay", new Style( {
+			fontSize: 14,
+			fontName: f.fontName,
+			fontEmbedded: true,
+			
+			backgroundColor: 0xffa84c,
+			backgroundColorGradientEnd: 0xff7b0d,
+			color: 0x222222,
+			padding: 10,
+			borderColor: 0x444444,
+			borderSize: 1,
+			cornerRadius: 2,
+			filter: new DropShadowFilter(2, 45, 0x444444, 1, 2, 2, 1, 3),
+			spacing: 5
+		} ));
+		
+		
+		addStyle("CalendarDay:over, Calendar #selectedDay:over", new Style( {
+			backgroundColor: 0xffb76b,
+			backgroundColorGradientEnd: 0xff7f04,
+			color: 0x222222,
+		} ));
+		
+		addStyle("CalendarDay:down, Calendar #selectedDay:down", new Style( {
+			backgroundColor: 0xffa84c,
+			backgroundColorGradientEnd: 0xff7b0d,
+			color: 0x444444,
+		} ));
+		
 		addStyle("TabView", new Style( {
 			backgroundColor: 0xcccccc,
 			borderColor: -1,
@@ -188,7 +255,7 @@ class DefaultStyles extends Styles {
 		} ));
 		addStyle("TabBar Button", new Style( {
 			height: 42,
-			iconPosition: "top",
+			iconPosition: "left",
 			cornerRadius: 0,
 			autoSize: true,
 			
@@ -206,6 +273,7 @@ class DefaultStyles extends Styles {
 			backgroundColorGradientEnd: 0xcccccc,
 			color: 0x444444,
 		} ));
+		
 		addStyle("HProgress", new Style( {
 			width: 150,
 			height: 30,
@@ -233,6 +301,34 @@ class DefaultStyles extends Styles {
 			cornerRadius: 2,
 		} ));
 
+		addStyle("VProgress", new Style( {
+			width: 30,
+			height: 150,
+			backgroundColor: 0x666666,
+			borderColor: -1,
+			padding: 2,
+			cornerRadius: 2,
+			borderSize: 0,
+			filter: new DropShadowFilter(1, 45, 0x444444, 1, 2, 2, 1, 3, true),
+		} ));
+		
+		addStyle("VProgress #background", new Style( {
+			percentWidth: 100,
+			percentHeight: 100,
+			backgroundColor: -1,
+			borderSize: 0,
+			borderColor: -1,
+		} ));
+		
+		addStyle("VProgress #value", new Style( {
+			percentWidth: 100,
+			backgroundColor: 0xffa84c,
+			backgroundColorGradientEnd: 0xff7b0d,
+			borderColor: -1,
+			cornerRadius: 2,
+			gradientType: "horizontal",
+		} ));
+		
 		addStyle("HSlider", new Style( {
 			width: 150,
 			height: 30,
@@ -269,6 +365,42 @@ class DefaultStyles extends Styles {
 			filter: new DropShadowFilter(2, 45, 0x666666, 1, 2, 2, 1, 3, false),
 		} ));
 
+		addStyle("VSlider", new Style( {
+			width: 30,
+			height: 150,
+			backgroundColor: 0x666666,
+			borderColor: -1,
+			padding: 2,
+			paddingLeft: 0,
+			paddingRight: 0,
+			cornerRadius: 2,
+			borderSize: 0,
+			filter: new DropShadowFilter(1, 45, 0x444444, 1, 2, 2, 1, 3, true),
+		} ));
+		
+		addStyle("VSlider #background", new Style( {
+			percentWidth: 100,
+			percentHeight: 100,
+			backgroundColor: -1,
+			borderSize: 0,
+			borderColor: -1,
+		} ));
+		
+		addStyle("VSlider #value", new Style( {
+			percentWidth: 0,
+			backgroundColor: 0xffa84c,
+			backgroundColorGradientEnd: 0xff7b0d,
+			borderColor: -1,
+			cornerRadius: 2,
+		} ));
+		
+		addStyle("VSlider Button", new Style( {
+			width: 26,
+			height: 26,
+			gradientType: "horizontal",
+			filter: new DropShadowFilter(2, 45, 0x666666, 1, 2, 2, 1, 3, false),
+		} ));
+		
 		addStyle("ScrollView", new Style( {
 			backgroundColor: 0x444444 ,
 			borderColor: -1,
@@ -365,7 +497,7 @@ class DefaultStyles extends Styles {
 			cornerRadius: 2,
 			padding: 1,
 			spacing: 1,
-			width: 350,
+			width: 400,
 		} ));
 
 		addStyle("Popup Container", new Style( {
