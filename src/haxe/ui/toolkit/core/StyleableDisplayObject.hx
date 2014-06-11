@@ -1,6 +1,6 @@
 package haxe.ui.toolkit.core;
 
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 import haxe.ds.StringMap;
 import haxe.ui.toolkit.core.interfaces.IClonable;
 import haxe.ui.toolkit.core.interfaces.ILayout;
@@ -105,6 +105,7 @@ class StyleableDisplayObject extends DisplayObjectContainer implements IStyleabl
 	private function get_style():Style {
 		if (_style == null) {
 			_style = new Style();
+			_style.target = this;
 		}
 		return _style;
 	}

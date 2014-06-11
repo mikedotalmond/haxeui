@@ -1,6 +1,6 @@
 package haxe.ui.toolkit.core;
 
-import flash.Lib;
+import openfl.Lib;
 import haxe.ds.StringMap;
 import haxe.ui.toolkit.controls.Menu;
 import haxe.ui.toolkit.core.interfaces.IDataComponent;
@@ -22,14 +22,15 @@ class Toolkit {
 	public static var instance(get, null):Toolkit;
 	private static function get_instance():Toolkit {
 		if (_instance == null) {
-			Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
-			Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
+			Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
+			Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
 			_instance = new Toolkit();
 		}
 		return _instance;
 	}
 	
 	public static function init():Void {
+		Macros.autoRegisterModules();
 		get_instance();
 		registerXMLProcessor(UIProcessor, "ui");
 		registerXMLProcessor(UIProcessor, "selection");
@@ -136,6 +137,9 @@ class Toolkit {
 			} else {
 				var p:IXMLProcessor = new UIProcessor();
 				result = p.process(node);
+				if (result == null) {
+					trace("WARNING: Could not find processor for '" + nodeName + "'");
+				}
 			}
 		}
 		
