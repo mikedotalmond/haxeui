@@ -499,7 +499,7 @@ class TableViewRow extends HBox implements IStateComponent {
 		if (_state != value) {
 			_state = value;
 			if (retrieveStyle(_state) != null) {
-				style = retrieveStyle(_state);
+				baseStyle = retrieveStyle(_state);
 			} else {
 				invalidate(InvalidationFlag.STATE);
 			}
